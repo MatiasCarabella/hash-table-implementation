@@ -2,10 +2,10 @@ import java.util.LinkedList;
 import java.util.Scanner;
 
 public class HashTable {
-    // Clase interna para representar una entrada en la tabla hash
+    // Inner class to represent an entry in the hash table
     private static class Entry {
         int value;
-        boolean isDeleted; // Indicador para saber si la entrada ha sido eliminada
+        boolean isDeleted; // Flag to indicate if the entry has been deleted
 
         public Entry(int value) {
             this.value = value;
@@ -18,25 +18,25 @@ public class HashTable {
         }
     }
 
-    // La tabla puede contener entradas o listas enlazadas para encadenamiento
+    // The table can contain entries or linked lists for chaining
     private Object[] table;
-    private static final int SIZE = 10; // Tamaño fijo de la tabla
+    private static final int SIZE = 10; // Fixed table size
 
-    // Constructor para inicializar la tabla hash
+    // Constructor to initialize the hash table
     public HashTable() {
         table = new Object[SIZE];
     }
 
-    // Función hash que usa el tamaño de la tabla (10)
+    // Hash function that uses the table size (10)
     public int hash(int value) {
         return value % SIZE;
     }
 
-    // Inserción usando sondeo lineal
+    // Insertion using linear probing
     public void insertLinear(int value) {
         int index = hash(value);
         int originalIndex = index;
-        // Buscar la siguiente posición disponible
+        // Find the next available position
         while (table[index] != null && !(table[index] instanceof LinkedList) && !((Entry) table[index]).isDeleted) {
             index = (index + 1) % SIZE;
             if (index == originalIndex) {
@@ -47,12 +47,12 @@ public class HashTable {
         table[index] = new Entry(value);
     }
 
-    // Inserción usando sondeo cuadrático
+    // Insertion using quadratic probing
     public void insertQuadratic(int value) {
         int index = hash(value);
         int originalIndex = index;
         int i = 1;
-        // Buscar la siguiente posición disponible usando secuencia cuadrática
+        // Find the next available position using quadratic sequence
         while (table[index] != null && !(table[index] instanceof LinkedList) && !((Entry) table[index]).isDeleted) {
             index = (originalIndex + i * i) % SIZE;
             i++;
@@ -64,19 +64,19 @@ public class HashTable {
         table[index] = new Entry(value);
     }
 
-    // Inserción usando encadenamiento (hashing abierto)
+    // Insertion using chaining (open hashing)
     public void insertChaining(int value) {
         int index = hash(value);
-        // Si no hay lista en el índice, crear una nueva lista
+        // If there's no list at the index, create a new list
         if (table[index] == null) {
             table[index] = new LinkedList < Entry > ();
         }
         LinkedList < Entry > chain = (LinkedList < Entry > ) table[index];
-        // Añadir el nuevo valor a la lista
+        // Add the new value to the list
         chain.add(new Entry(value));
     }
 
-    // Búsqueda usando sondeo lineal
+    // Search using linear probing
     public boolean containsLinear(int value) {
         int index = hash(value);
         int originalIndex = index;
@@ -92,7 +92,7 @@ public class HashTable {
         return false;
     }
 
-    // Búsqueda usando sondeo cuadrático
+    // Search using quadratic probing
     public boolean containsQuadratic(int value) {
         int index = hash(value);
         int originalIndex = index;
@@ -110,7 +110,7 @@ public class HashTable {
         return false;
     }
 
-    // Búsqueda usando encadenamiento (hashing abierto)
+    // Search using chaining (open hashing)
     public boolean containsChaining(int value) {
         int index = hash(value);
         LinkedList < Entry > chain = (LinkedList < Entry > ) table[index];
@@ -124,7 +124,7 @@ public class HashTable {
         return false;
     }
 
-    // Eliminación usando sondeo lineal
+    // Deletion using linear probing
     public void removeLinear(int value) {
         int index = hash(value);
         int originalIndex = index;
@@ -140,7 +140,7 @@ public class HashTable {
         }
     }
 
-    // Eliminación usando sondeo cuadrático
+    // Deletion using quadratic probing
     public void removeQuadratic(int value) {
         int index = hash(value);
         int originalIndex = index;
@@ -158,7 +158,7 @@ public class HashTable {
         }
     }
 
-    // Eliminación usando encadenamiento (hashing abierto)
+    // Deletion using chaining (open hashing)
     public void removeChaining(int value) {
         int index = hash(value);
         LinkedList < Entry > chain = (LinkedList < Entry > ) table[index];
@@ -172,7 +172,7 @@ public class HashTable {
         }
     }
 
-    // Imprimir el contenido de la tabla hash
+    // Print the hash table contents
     public void printTable() {
         for (int i = 0; i < SIZE; i++) {
             if (table[i] instanceof LinkedList) {
@@ -194,18 +194,18 @@ public class HashTable {
         int option;
 
         do {
-            System.out.println("\nElige el método de manejo de colisiones:");
-            System.out.println("1. Sondeo Lineal");
-            System.out.println("2. Sondeo Cuadrático");
-            System.out.println("3. Encadenamiento");
-            System.out.println("4. Salir");
-            System.out.print("Opción: ");
+            System.out.println("\nChoose the collision handling method:");
+            System.out.println("1. Linear Probing");
+            System.out.println("2. Quadratic Probing");
+            System.out.println("3. Chaining");
+            System.out.println("4. Exit");
+            System.out.print("Option: ");
             option = scanner.nextInt();
 
             switch (option) {
                 case 1:
-                    // Llamadas a métodos para Sondeo Lineal
-                    System.out.println("\nInsertando usando sondeo lineal:");
+                    // Method calls for Linear Probing
+                    System.out.println("\nInserting using linear probing:");
                     hashTable.insertLinear(10);
                     hashTable.insertLinear(20);
                     hashTable.insertLinear(30);
@@ -213,16 +213,16 @@ public class HashTable {
                     hashTable.insertLinear(31);
                     hashTable.printTable();
 
-                    System.out.println("Contiene 20 (Lineal): " + hashTable.containsLinear(20));
+                    System.out.println("Contains 20 (Linear): " + hashTable.containsLinear(20));
                     hashTable.removeLinear(20);
-                    System.out.println("Después de eliminar 20 (Lineal):");
+                    System.out.println("After removing 20 (Linear):");
                     hashTable.printTable();
                     break;
                 case 2:
-                    // Llamadas a métodos para Sondeo Cuadrático
-                    hashTable = new HashTable(); // Reiniciar la tabla para sondeo cuadrático
+                    // Method calls for Quadratic Probing
+                    hashTable = new HashTable(); // Reset the table for quadratic probing
 
-                    System.out.println("\nInsertando usando sondeo cuadrático:");
+                    System.out.println("\nInserting using quadratic probing:");
                     hashTable.insertQuadratic(10);
                     hashTable.insertQuadratic(20);
                     hashTable.insertQuadratic(30);
@@ -230,16 +230,16 @@ public class HashTable {
                     hashTable.insertQuadratic(31);
                     hashTable.printTable();
 
-                    System.out.println("Contiene 20 (Cuadrático): " + hashTable.containsQuadratic(20));
+                    System.out.println("Contains 20 (Quadratic): " + hashTable.containsQuadratic(20));
                     hashTable.removeQuadratic(20);
-                    System.out.println("Después de eliminar 20 (Cuadrático):");
+                    System.out.println("After removing 20 (Quadratic):");
                     hashTable.printTable();
                     break;
                 case 3:
-                    // Llamadas a métodos para Encadenamiento
-                    hashTable = new HashTable(); // Reiniciar la tabla para encadenamiento
+                    // Method calls for Chaining
+                    hashTable = new HashTable(); // Reset the table for chaining
 
-                    System.out.println("\nInsertando usando encadenamiento:");
+                    System.out.println("\nInserting using chaining:");
                     hashTable.insertChaining(10);
                     hashTable.insertChaining(20);
                     hashTable.insertChaining(30);
@@ -247,16 +247,16 @@ public class HashTable {
                     hashTable.insertChaining(31);
                     hashTable.printTable();
 
-                    System.out.println("Contiene 20 (Encadenamiento): " + hashTable.containsChaining(20));
+                    System.out.println("Contains 20 (Chaining): " + hashTable.containsChaining(20));
                     hashTable.removeChaining(20);
-                    System.out.println("Después de eliminar 20 (Encadenamiento):");
+                    System.out.println("After removing 20 (Chaining):");
                     hashTable.printTable();
                     break;
                 case 4:
-                    System.out.println("Saliendo...");
+                    System.out.println("Exiting...");
                     break;
                 default:
-                    System.out.println("Opción no válida, intenta de nuevo.");
+                    System.out.println("Invalid option, please try again.");
             }
         } while (option != 4);
         scanner.close();
